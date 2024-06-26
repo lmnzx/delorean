@@ -8,6 +8,7 @@ EndPoint - https://delorean.snxk.workers.dev/identify
 - TypeScript
 - Drizzler [orm of sqlite]
 - Turso [sqlite database with distibuted replicas in three regions 🚀]
+- Cloudflare Worker [serveless function]
 
 ## Further Improvements
 - Testing
