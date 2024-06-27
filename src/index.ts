@@ -90,20 +90,26 @@ app.post('/identify', async (c) => {
     if (primaryContact) {
         const primaryId = primaryContact.linkPrecedence === 'secondary' ? primaryContact.linkedId : primaryContact.id
         if (primaryId) {
+            primaryContact = await db.query.contacts.findFirst({
+                where: eq(contacts.id, primaryId)
+            })
+
             const secondaryContacts = await db.query.contacts.findMany({
                 where: eq(contacts.linkedId, primaryId)
             })
 
-            const response = {
-                contacts: {
-                    primaryContactId: primaryId,
-                    emails: [primaryContact.email, ...secondaryContacts.map(c => c.email)].filter((v, i, a) => v && a.indexOf(v) === i),
-                    phoneNumbers: [primaryContact.phoneNumber, ...secondaryContacts.map(c => c.phoneNumber)].filter((v, i, a) => v && a.indexOf(v) === i),
-                    secondaryContactIds: secondaryContacts.map(c => c.id)
+            if (primaryContact) {
+                const response = {
+                    contacts: {
+                        primaryContactId: primaryContact.id,
+                        emails: [primaryContact.email, ...secondaryContacts.map(c => c.email)].filter((v, i, a) => v && a.indexOf(v) === i),
+                        phoneNumbers: [primaryContact.phoneNumber, ...secondaryContacts.map(c => c.phoneNumber)].filter((v, i, a) => v && a.indexOf(v) === i),
+                        secondaryContactIds: secondaryContacts.map(c => c.id)
 
+                    }
                 }
+                return c.json(response)
             }
-            return c.json(response)
         }
     } else {
         return c.json({ error: "Contact was not found :(" }, 400)
