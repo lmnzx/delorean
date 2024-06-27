@@ -11,5 +11,6 @@ EndPoint - https://delorean.snxk.workers.dev/identify
 - Cloudflare Worker [serveless function]
 
 ## Further Improvements
+- Validaton with zod
 - Testing
 - CI/CD with Github Actions
